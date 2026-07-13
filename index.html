@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Studio Lara Silva — Nail Design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black: #0c0a08;
+    --black-2: #14110d;
+    --gold: #c9a24d;
+    --gold-soft: #e2c483;
+    --gold-dim: #8a7038;
+    --cream: #f3ecdd;
+    --cream-dim: #cfc6b3;
+    --line: rgba(201,162,77,0.22);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--black);
+    color:var(--cream);
+    font-family:'Jost', sans-serif;
+    font-weight:300;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  h1,h2,h3, .serif{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:500;
+    letter-spacing:0.01em;
+  }
+  a{color:inherit; text-decoration:none;}
+  img{display:block; width:100%; height:100%; object-fit:cover;}
+  .wrap{max-width:1240px; margin:0 auto; padding:0 40px;}
+  .eyebrow{
+    text-transform:uppercase;
+    letter-spacing:0.28em;
+    font-size:0.7rem;
+    color:var(--gold);
+    font-weight:500;
+  }
+
+  /* ---------- NAV ---------- */
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    background:linear-gradient(to bottom, rgba(12,10,8,0.92), rgba(12,10,8,0));
+    padding:26px 0 40px;
+    transition:background .3s ease, padding .3s ease;
+  }
+  header.scrolled{
+    background:rgba(10,8,6,0.92);
+    backdrop-filter:blur(10px);
+    padding:16px 0;
+    border-bottom:1px solid var(--line);
+  }
+  nav{
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .logo{
+    font-family:'Cormorant Garamond', serif;
+    font-size:1.5rem;
+    letter-spacing:0.18em;
+    color:var(--gold-soft);
+  }
+  .nav-links{
+    display:flex; gap:38px; list-style:none;
+    font-size:0.82rem; letter-spacing:0.12em; text-transform:uppercase;
+  }
+  .nav-links a{
+    color:var(--cream-dim);
+    position:relative;
+    padding-bottom:6px;
+    transition:color .25s ease;
+  }
+  .nav-links a:hover, .nav-links a.active{color:var(--gold-soft);}
+  .nav-links a.active::after{
+    content:''; position:absolute; left:0; bottom:0; width:100%; height:1px; background:var(--gold);
+  }
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:13px 26px;
+    font-size:0.78rem; letter-spacing:0.1em; text-transform:uppercase;
+    border:1px solid var(--gold);
+    transition:all .3s ease;
+    white-space:nowrap;
+  }
+  .btn-solid{ background:var(--gold); color:var(--black); }
+  .btn-solid:hover{ background:var(--gold-soft); border-color:var(--gold-soft); }
+  .btn-outline{ background:transparent; color:var(--cream); border-color:rgba(243,236,221,0.35); }
+  .btn-outline:hover{ border-color:var(--gold); color:var(--gold-soft); }
+  .nav-cta{display:none;}
+  @media(min-width:1000px){ .nav-cta{display:inline-flex;} }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    min-height:100vh;
+    aspect-ratio:16/9; /* acompanha a proporção da foto de referência (ambiente + logo) */
+    max-height:900px;
+    display:flex; align-items:center;
+    padding-top:120px;
+    overflow:hidden;
+  }
+  .hero-bg{
+    position:absolute; inset:0;
+    z-index:0;
+  }
+  /* Imagem quase sem escurecimento — o objetivo é ela aparecer nítida, como na referência.
+     Troque o src da img em .hero-bg pela sua foto do ambiente. */
+  .hero-bg img{ opacity:1; }
+  .hero-bg::after{
+    content:'';
+    position:absolute; inset:0;
+    /* escurece só o lado esquerdo (onde fica o texto) e deixa o resto da foto visível */
+    background:linear-gradient(100deg, rgba(12,10,8,0.92) 8%, rgba(12,10,8,0.55) 30%, rgba(12,10,8,0.1) 55%, rgba(12,10,8,0) 75%);
+  }
+  .hero-content{
+    position:relative; z-index:2;
+    max-width:620px;
+  }
+  .hero-content .eyebrow{ margin-bottom:22px; display:block; }
+  .hero-content h1{
+    font-size:clamp(2.6rem, 5.2vw, 4.4rem);
+    line-height:1.05;
+    color:var(--cream);
+  }
+  .hero-content h1 em{
+    font-style:italic;
+    color:var(--gold-soft);
+  }
+  .hero-content p{
+    margin-top:26px;
+    font-size:1.05rem;
+    line-height:1.7;
+    color:var(--cream-dim);
+    max-width:480px;
+  }
+  .hero-cta{
+    display:flex; gap:18px; margin-top:40px; flex-wrap:wrap;
+  }
+  .scroll-cue{
+    position:absolute; bottom:40px; left:50%; transform:translateX(-50%);
+    width:40px; height:40px; border:1px solid var(--line); border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    z-index:3; color:var(--gold);
+    animation:bob 2.4s ease-in-out infinite;
+  }
+  @keyframes bob{ 0%,100%{transform:translate(-50%,0);} 50%{transform:translate(-50%,8px);} }
+
+  /* ---------- FEATURES STRIP ---------- */
+  .features{
+    background:var(--black-2);
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    padding:64px 0;
+  }
+  .features .wrap{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:40px;
+  }
+  .feature{ text-align:center; }
+  .feature .icon{
+    width:44px; height:44px; margin:0 auto 20px;
+    display:flex; align-items:center; justify-content:center;
+    color:var(--gold);
+  }
+  .feature .icon svg{ width:100%; height:100%; }
+  .feature h3{
+    font-family:'Jost', sans-serif; font-weight:500;
+    font-size:0.78rem; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--gold-soft);
+    margin-bottom:10px;
+  }
+  .feature p{
+    font-size:0.9rem; color:var(--cream-dim); line-height:1.6;
+  }
+
+  /* ---------- SECTION HEAD ---------- */
+  .section{ padding:120px 0; }
+  .section-head{
+    display:flex; justify-content:space-between; align-items:flex-end;
+    margin-bottom:60px; gap:30px; flex-wrap:wrap;
+  }
+  .section-head h2{ font-size:clamp(2rem,3.4vw,2.8rem); margin-top:14px; }
+  .section-head p{ color:var(--cream-dim); max-width:340px; line-height:1.6; margin-top:14px; font-size:0.95rem;}
+
+  /* ---------- SERVICES ---------- */
+  .services{ background:var(--black); }
+  .scroll-row{
+    display:flex; gap:26px;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    scroll-padding-left:40px;
+    padding-bottom:26px;
+    margin-bottom:-26px;
+  }
+  .scroll-row::-webkit-scrollbar{ height:6px; }
+  .scroll-row::-webkit-scrollbar-track{ background:var(--black-2); }
+  .scroll-row::-webkit-scrollbar-thumb{ background:var(--gold-dim); border-radius:4px; }
+  .scroll-row::-webkit-scrollbar-thumb:hover{ background:var(--gold); }
+  .service-grid{
+    flex-wrap:nowrap;
+  }
+  .service-card{
+    position:relative;
+    flex:0 0 280px;
+    aspect-ratio:3/4;
+    overflow:hidden;
+    border:1px solid var(--line);
+    scroll-snap-align:start;
+  }
+  .service-card img{ transition:transform .6s ease; }
+  .service-card:hover img{ transform:scale(1.06); }
+  .service-card::after{
+    content:'';
+    position:absolute; inset:0;
+    background:linear-gradient(to top, rgba(10,8,6,0.95) 25%, rgba(10,8,6,0.1) 60%);
+  }
+  .service-info{
+    position:absolute; left:0; right:0; bottom:0; z-index:2;
+    padding:26px 22px;
+  }
+  .service-info h3{
+    font-family:'Jost',sans-serif; font-weight:500;
+    font-size:0.85rem; letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--gold-soft); margin-bottom:8px;
+  }
+  .service-info p{ font-size:0.85rem; color:var(--cream-dim); line-height:1.5; }
+
+  /* ---------- PORTFOLIO ---------- */
+  .portfolio{ background:var(--black-2); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+  .portfolio-grid{
+    flex-wrap:nowrap;
+  }
+  .portfolio-item{ flex:0 0 220px; aspect-ratio:3/4; overflow:hidden; border:1px solid var(--line); scroll-snap-align:start; }
+  .portfolio-item img{ transition:transform .6s ease, filter .6s ease; filter:grayscale(15%); }
+  .portfolio-item:hover img{ transform:scale(1.07); filter:grayscale(0%); }
+
+  /* ---------- CTA BAND ---------- */
+  .cta-band{
+    background:linear-gradient(120deg, var(--gold-dim), var(--gold) 60%, var(--gold-soft));
+    color:var(--black);
+    padding:60px 0;
+  }
+  .cta-band .wrap{
+    display:flex; align-items:center; justify-content:space-between; gap:40px; flex-wrap:wrap;
+  }
+  .cta-band h2{ font-size:clamp(1.8rem,3vw,2.4rem); color:var(--black); max-width:420px; }
+  .cta-band-right{ display:flex; align-items:center; gap:30px; flex-wrap:wrap; }
+  .cta-band-right p{ max-width:280px; font-size:0.92rem; line-height:1.55; }
+  .cta-band .btn-solid{ background:var(--black); color:var(--gold-soft); border-color:var(--black); }
+  .cta-band .btn-solid:hover{ background:#221c14; }
+
+  /* ---------- FOOTER ---------- */
+  footer{ background:var(--black); padding:80px 0 0; }
+  .footer-grid{
+    display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:40px;
+    padding-bottom:60px; border-bottom:1px solid var(--line);
+  }
+  .footer-logo{
+    width:56px; height:56px; margin-bottom:18px; color:var(--gold);
+  }
+  .footer-brand p{ color:var(--cream-dim); font-size:0.85rem; max-width:220px; line-height:1.6; }
+  .footer-col h4{
+    font-size:0.75rem; text-transform:uppercase; letter-spacing:0.14em;
+    color:var(--gold-soft); margin-bottom:20px; font-family:'Jost',sans-serif; font-weight:500;
+  }
+  .footer-col ul{ list-style:none; display:flex; flex-direction:column; gap:12px; }
+  .footer-col a, .footer-col li{ color:var(--cream-dim); font-size:0.9rem; }
+  .footer-col a:hover{ color:var(--gold-soft); }
+  .footer-col li{ display:flex; gap:10px; align-items:flex-start; }
+  .footer-col li svg{ width:16px; height:16px; flex-shrink:0; margin-top:3px; color:var(--gold); }
+  .footer-bottom{
+    display:flex; justify-content:space-between; padding:26px 0;
+    font-size:0.8rem; color:var(--cream-dim); flex-wrap:wrap; gap:10px;
+  }
+
+  @media(max-width:980px){
+    .nav-links{ display:none; }
+    .features .wrap{ grid-template-columns:repeat(2,1fr); gap:48px 28px; }
+    .footer-grid{ grid-template-columns:1fr 1fr; }
+  }
+  @media(max-width:560px){
+    .wrap{ padding:0 24px; }
+    .section{ padding:72px 0; }
+
+    /* Hero: a altura da foto agora acompanha a proporção original dela (3:2),
+       então ela aparece completa, sem cortes — o texto pode se estender
+       um pouco além da foto quando não couber inteiro dentro dela */
+    .hero{
+      aspect-ratio:auto;
+      max-height:none;
+      min-height:auto;
+      padding-top:120px;
+      padding-bottom:40px;
+    }
+    .hero-bg{
+      top:0; left:0; right:0; bottom:auto;
+      aspect-ratio:3/2; /* mesma proporção da foto original enviada */
+    }
+    .hero-bg::after{
+      /* no mobile o overlay é diagonal: escuro onde fica o texto (topo/esquerda),
+         e vai clareando pra baixo, deixando mais da foto visível */
+      background:linear-gradient(160deg, rgba(12,10,8,0.93) 20%, rgba(12,10,8,0.78) 45%, rgba(12,10,8,0.4) 70%, rgba(12,10,8,0.15) 100%);
+    }
+    .hero-content p{ max-width:100%; }
+    .hero-cta{ margin-top:32px; gap:14px; }
+    .scroll-cue{ display:none; } /* sem espaço reservado pra rolagem, fica mais compacto e limpo */
+
+    /* Features: mais respiro entre os itens, texto um pouco mais compacto */
+    .features{ padding:56px 0; }
+    .features .wrap{ gap:40px 20px; }
+    .feature .icon{ width:38px; height:38px; margin-bottom:14px; }
+    .feature p{ font-size:0.85rem; }
+
+    /* Seções: cabeçalho com mais espaço até o conteúdo abaixo */
+    .section-head{ margin-bottom:40px; gap:20px; }
+    .section-head p{ max-width:100%; }
+
+    /* Cards de serviço e portfólio: um pouco menores pra caber melhor na tela e sugerir o próximo card */
+    .service-card{ flex:0 0 240px; }
+    .portfolio-item{ flex:0 0 180px; }
+
+    .footer-grid{ grid-template-columns:1fr; gap:36px; }
+    .cta-band .wrap{ flex-direction:column; align-items:flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<header id="header">
+  <div class="wrap">
+    <nav>
+      <div class="logo">LARA SILVA</div>
+      <ul class="nav-links">
+        <li><a href="#inicio" class="active">Início</a></li>
+        <li><a href="#sobre">Sobre</a></li>
+        <li><a href="#servicos">Serviços</a></li>
+        <li><a href="#portfolio">Portfólio</a></li>
+        <li><a href="#contato">Contato</a></li>
+      </ul>
+      <a href="#contato" class="btn btn-solid nav-cta">Agendar Horário</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" id="inicio">
+  <div class="hero-bg">
+    <img src="hero-studio.jpeg" alt="Studio Lara Silva - ambiente com logo em diamante">
+  </div>
+  <div class="wrap">
+    <div class="hero-content">
+      <span class="eyebrow">Studio Lara Silva · Nail Design</span>
+      <h1>Suas unhas,<br><em>sua assinatura.</em></h1>
+      <p>Técnica precisa, materiais premium e atendimento individual, em um espaço pensado para o seu momento de cuidado.</p>
+      <div class="hero-cta">
+        <a href="#contato" class="btn btn-solid">Agendar Horário</a>
+        <a href="#portfolio" class="btn btn-outline">Ver Portfólio</a>
+      </div>
+    </div>
+  </div>
+  <a href="#servicos" class="scroll-cue" aria-label="Rolar para baixo">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 9l6 6 6-6"/></svg>
+  </a>
+</section>
+
+<section class="features">
+  <div class="wrap">
+    <div class="feature">
+      <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 3h12l3 5-9 13L3 8l3-5z"/><path d="M3 8h18M9 3l3 5 3-5M12 8l-2 13M12 8l2 13"/></svg></div>
+      <h3>Alto Padrão</h3>
+      <p>Materiais premium e higiene impecável</p>
+    </div>
+    <div class="feature">
+      <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.9-6.3 3.9 1.7-7L2 9.2l7.1-.6L12 2z"/></svg></div>
+      <h3>Técnica Precisa</h3>
+      <p>Acabamento perfeito e duradouro</p>
+    </div>
+    <div class="feature">
+      <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg></div>
+      <h3>Atendimento VIP</h3>
+      <p>Experiência exclusiva e personalizada</p>
+    </div>
+    <div class="feature">
+      <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="5" width="18" height="16" rx="1"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></div>
+      <h3>Agendamento Fácil</h3>
+      <p>Escolha o melhor dia e horário para você</p>
+    </div>
+  </div>
+</section>
+
+<section class="section services" id="servicos">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">O que fazemos</span>
+        <h2>Serviços</h2>
+        <p>Soluções completas para realçar a beleza e o cuidado das suas unhas.</p>
+      </div>
+      <a href="#contato" class="btn btn-outline">Ver Todos os Serviços</a>
+    </div>
+    <div class="service-grid scroll-row">
+      <div class="service-card">
+        <img src="https://images.unsplash.com/photo-1604654894610-df63bc536371?q=80&w=800&auto=format&fit=crop" alt="Alongamento de unhas">
+        <div class="service-info"><h3>Alongamento</h3><p>Diversas técnicas para o formato perfeito</p></div>
+      </div>
+      <div class="service-card">
+        <img src="https://images.unsplash.com/photo-1587909209111-5097ee578ec3?q=80&w=800&auto=format&fit=crop" alt="Gel e blindagem">
+        <div class="service-info"><h3>Gel &amp; Blindagem</h3><p>Mais resistência e brilho por muito mais tempo</p></div>
+      </div>
+      <div class="service-card">
+        <img src="https://images.unsplash.com/photo-1610992015732-2449b76344bc?q=80&w=800&auto=format&fit=crop" alt="Nail art">
+        <div class="service-info"><h3>Nail Art</h3><p>Designs exclusivos e personalizados</p></div>
+      </div>
+      <div class="service-card">
+        <img src="https://images.unsplash.com/photo-1519014816548-bf5fe059798b?q=80&w=800&auto=format&fit=crop" alt="Manutenção">
+        <div class="service-info"><h3>Manutenção</h3><p>Cuidado e manutenção para unhas impecáveis</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section portfolio" id="portfolio">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Nosso trabalho</span>
+        <h2>Cada detalhe, feito com paixão e perfeição</h2>
+      </div>
+      <a href="#contato" class="btn btn-outline">Ver Portfólio</a>
+    </div>
+    <div class="portfolio-grid scroll-row">
+      <div class="portfolio-item"><img src="https://images.unsplash.com/photo-1610992015732-2449b76344bc?q=80&w=500&auto=format&fit=crop" alt="Trabalho 1"></div>
+      <div class="portfolio-item"><img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=500&auto=format&fit=crop" alt="Trabalho 2"></div>
+      <div class="portfolio-item"><img src="https://images.unsplash.com/photo-1604902396830-aca29e19b067?q=80&w=500&auto=format&fit=crop" alt="Trabalho 3"></div>
+      <div class="portfolio-item"><img src="https://images.unsplash.com/photo-1596704017254-9b121068fb31?q=80&w=500&auto=format&fit=crop" alt="Trabalho 4"></div>
+      <div class="portfolio-item"><img src="https://images.unsplash.com/photo-1607779097040-26e80aa78e66?q=80&w=500&auto=format&fit=crop" alt="Trabalho 5"></div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="wrap">
+    <h2>Pronta para elevar sua beleza?</h2>
+    <div class="cta-band-right">
+      <p>Agende agora seu horário e viva uma experiência única no Studio Lara Silva.</p>
+      <a href="#contato" class="btn btn-solid">Agendar Horário</a>
+    </div>
+  </div>
+</section>
+
+<footer id="contato">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <svg class="footer-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M6 3h12l3 5-9 13L3 8l3-5z"/><path d="M3 8h18M9 3l3 5 3-5M12 8l-2 13M12 8l2 13"/></svg>
+        <div class="logo" style="font-size:1.3rem;">LARA SILVA</div>
+        <p style="margin-top:14px;">Studio de nail design dedicado à técnica precisa e ao cuidado individual.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navegação</h4>
+        <ul>
+          <li><a href="#inicio">Início</a></li>
+          <li><a href="#servicos">Serviços</a></li>
+          <li><a href="#portfolio">Portfólio</a></li>
+          <li><a href="#contato">Contato</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contato</h4>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> (31) 99999-9999</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/></svg> @studio.larasilva</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Rua das Flores, 123 — Centro</li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Horário de Atendimento</h4>
+        <ul>
+          <li>Segunda a Sexta: 09h às 19h</li>
+          <li>Sábado: 09h às 14h</li>
+          <li>Domingo: Fechado</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Studio Lara Silva. Todos os direitos reservados.</span>
+      <span>Desenvolvido com ♥ paixão.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const header = document.getElementById('header');
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  const links = document.querySelectorAll('.nav-links a');
+  const sections = document.querySelectorAll('section[id]');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(sec => {
+      const top = sec.offsetTop - 140;
+      if (window.scrollY >= top) current = sec.getAttribute('id');
+    });
+    links.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    });
+  });
+</script>
+
+</body>
+</html>
